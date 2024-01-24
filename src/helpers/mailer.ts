@@ -10,10 +10,16 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
     const hashedToken = await bcryptjs.hash(userId.toString(), 10);
 
     if (emailType === 'VERIFY') {
-      await User.findByIdAndUpdate(userId, {
+      const updatingDB = await User.findByIdAndUpdate(userId, {
         verifyToken: hashedToken,
         verifyTokenExpiry: Date.now() + 3600000,
       });
+      
+      if(updatingDB){
+        console.log("updation successful")
+      }else{
+        console.log("fail")
+      }
     } else if (emailType === 'RESET') {
       console.log("I am reset");
       await User.findByIdAndUpdate(userId, {
